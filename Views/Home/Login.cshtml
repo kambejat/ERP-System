@@ -1,0 +1,49 @@
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+<form id="loginForm">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" class="form-control" id="username" name="username" required />
+    </div>
+    <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" name="password_hash" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+<div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        const response = await fetch("http://localhost:5211/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem("token", data.token); // Save token for authentication
+            window.location.href = "/Dashboard"; // Redirect to dashboard
+        } else {
+            document.getElementById("errorMessage").innerText = data.message || "Invalid credentials";
+            document.getElementById("errorMessage").style.display = "block";
+        }
+    });
+</script>

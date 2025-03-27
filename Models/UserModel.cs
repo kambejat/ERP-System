@@ -29,6 +29,8 @@ namespace Erp.Models
         public DateTime created_at { get; set; } = DateTime.UtcNow;
         [Column("updated_at")]
         public DateTime updated_at { get; set; } = DateTime.UtcNow;
+        [Column("isActive")]
+        public bool isActive { get; set; } = true;
 
     }
 
