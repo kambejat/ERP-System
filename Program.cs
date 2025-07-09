@@ -10,6 +10,28 @@ builder.Services.AddDbContext<Erp.Data.ERPDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllers();
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder
+            .AllowAnyOrigin()   // Allows requests from any origin (no restrictions)
+            .AllowAnyHeader()   // Allows any HTTP headers
+            .AllowAnyMethod();  // Allows GET, POST, PUT, DELETE, etc.
+    });
+});
+
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Home/Login"; // Redirect to login if not authenticated
+        options.LogoutPath = "/Home/Logout";
+        options.AccessDeniedPath = "/Users/AccessDenied";
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,6 +46,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseAuthorization();
+
 
 app.MapStaticAssets();
 

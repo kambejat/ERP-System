@@ -1,9 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Erp.Models
 
 {
+    [Index(nameof(username), IsUnique = true)]
     public class User {
 
         [Key]
@@ -11,6 +13,7 @@ namespace Erp.Models
         public int user_id { get; set; }
         [Required]
         [MaxLength(50)]
+        
         [Column("username")]
         public string? username { get; set; }
         [Required]

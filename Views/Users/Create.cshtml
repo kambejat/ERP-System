@@ -1,0 +1,65 @@
+@model Erp.Models.User
+
+@{
+    ViewData["Title"] = "Create User";
+    
+}
+
+
+<h2>@ViewData["Title"]</h2>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" value="@Model.username" required maxlength="50" />
+        <div class="invalid-feedback">
+            Please enter a username.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="@Model.email" required maxlength="100" />
+        <div class="invalid-feedback">
+            Please enter a valid email address.
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <label for="password_hash" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password_hash" name="password_hash" value="@Model.password_hash" required maxlength="255" />
+        <div class="invalid-feedback">
+            Please enter a password.
+        </div>
+    </div>
+
+    <div class="mb-3">
+    <label for="role" class="form-label">Role</label>
+    <select class="form-select" id="role" name="role" required>
+        @{
+            var roles = new List<string> { "Admin", "Manager", "Staff" };
+            foreach (var role in roles)
+            {
+                <option value="@role" selected="@(Model.role == role ? "selected" : null)">@role</option>
+            }
+        }
+    </select>
+    <div class="invalid-feedback">
+        Please select a role.
+    </div>
+</div>
+
+
+    <div class="mb-3">
+        <label for="isActive" class="form-label">Active Status</label>
+        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" @if(Model.isActive) { <text>checked</text> } />
+        <label class="form-check-label" for="isActive">Is Active</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create User</button>
+    <a href="@Url.Action("Index", "Users")" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

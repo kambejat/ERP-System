@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<h1>Hello, Welcome to the Dashboard!</h1>
+<p>Here you can manage users and view other statistics.</p>
+
+<!-- Add User Button -->
+<a href="@Url.Action("Create", "Users")" class="btn btn-primary mb-3">Add User</a>
+
+<!-- Optional Content -->
+<div class="card mt-4">
+    <div class="card-header">
+        Recent Activity
+    </div>
+    <div class="card-body">
+        <p>Display some recent activities or statistics here.</p>
+    </div>
+</div>

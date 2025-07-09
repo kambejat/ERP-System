@@ -1,0 +1,46 @@
+@model Erp.Models.User
+
+@{
+    ViewData["Title"] = "Edit Users";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label for="username" class="form-label">Username</label>
+        <input type="text" class="form-control" id="username" name="username" value="@Model.username" required maxlength="50" />
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" value="@Model.email" required maxlength="100" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password_hash" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password_hash" name="password_hash" value="@Model.password_hash" required maxlength="255" />
+    </div>
+
+    <div class="mb-3">
+    <label for="role" class="form-label">Role</label>
+    <select class="form-select" id="role" name="role" required>
+        <option value="Admin" @(Model.role == "Admin" ? "selected" : "")>Admin</option>
+        <option value="Manager" @(Model.role == "Manager" ? "selected" : "")>Manager</option>
+        <option value="Staff" @(Model.role == "Staff" ? "selected" : "")>Staff</option>
+    </select>
+    <div class="invalid-feedback">
+        Please select a role.
+    </div>
+</div>
+
+    <div class="mb-3">
+        <label for="isActive" class="form-label">Active Status</label>
+        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" @if(Model.isActive) { <text>checked</text> } />
+        <label class="form-check-label" for="isActive">Is Active</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+    <a href="@Url.Action("Index", "Users")" class="btn btn-secondary">Cancel</a>
+</form>

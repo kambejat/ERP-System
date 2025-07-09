@@ -4762,11 +4762,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\erp\\Erp.csproj",
+      "projectUniqueName": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\Erp.csproj",
       "projectName": "Erp",
-      "projectPath": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\erp\\Erp.csproj",
+      "projectPath": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\Erp.csproj",
       "packagesPath": "C:\\Users\\Trevor Kambeja\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\erp\\obj\\",
+      "outputPath": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Trevor Kambeja\\AppData\\Roaming\\NuGet\\NuGet.Config"
