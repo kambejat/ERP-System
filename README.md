@@ -1,96 +1,129 @@
-# ERP Console — Flowbite/Tailwind admin UI
+# ERP Console — Flowbite / Tailwind Admin UI
 
-This adds a full set of Razor views (styled with Tailwind + Flowbite, loaded via CDN — no
-npm/build step needed) for every entity in your ERP, plus the MVC controllers needed to serve
-them. It's meant to be copied on top of your existing project.
+A full set of **Razor views** (Tailwind CSS + Flowbite via CDN — no npm/build step) for every entity in the ERP, plus the **MVC controllers** that serve them. Copy these files on top of your existing ASP.NET project.
 
-**Update:** after the first build failed, you shared your real `Models/` — every view and
-controller below has now been checked property-by-property against those actual classes (a
-small script cross-referenced every `Model.x` / `item.x` / `asp-for="x"` in this project against
-your real model files). I don't have a .NET SDK in my environment, so I can't literally compile
-your project, but this pass gives much higher confidence than the first round did.
+Views and controllers were cross-checked property-by-property against your real `Models/` (including a script pass over every `Model.x` / `item.x` / `asp-for="x"`). This environment has no .NET SDK, so the project cannot be compiled here; that model pass is the main confidence check.
 
-## What the failed build caught, and what I found on top of it
+---
 
-1. **`Supplier`** — I'd guessed its fields, since it wasn't in your SQL script. Your real model
-   uses `name_of_supplier` (not `supplier_name`), and has no `status` or `updated_at` at all.
-   `Views/Suppliers/*` and `SupplierViewController.cs` are rebuilt to match exactly: `supplier_id,
-   name_of_supplier, contact_person, email, phone, address, created_at`.
-2. **`Transaction.status` / `Transaction.payment_method`** — these are real C# enums
-   (`TransactionStatus`: `pending, completed, failed`; `PaymentMethod`: `cash, card,
-   bank_transfer`), not plain ints. The dropdowns and badges now use
-   `Enum.GetValues<T>()` and compare against the enum values directly instead of magic numbers.
-3. **`Order.status`** — same issue, and this one wasn't in your error list, but I found it while
-   checking your `OrderModel.cs`: it's an `OrderStatus` enum with only **three** values
-   (`pending, completed, cancelled` — not the five I'd assumed). Fixed in `Views/Orders/*`,
-   and in `OrderViewController.cs` (a leftover `status = 0` default is gone — the model already
-   defaults to `pending`).
-4. **`DashboardController.cs`** compared `Order.status` and `Transaction.status` against raw
-   ints (`o.status < 3`, `t.status == 1`) — same enum problem, plus it was missing
-   `using Erp.Models;` for the enum types. Both fixed.
+## Table of contents
 
-None of your other entities (`Employee`, `Attendance`, `LeaveRequest`, `Payroll`, `Product`,
-`Setting`, `Log`, `User`) needed changes — their field names already matched.
+1. [What’s included](#whats-included)
+2. [Model alignment fixes](#model-alignment-fixes)
+3. [Routes & controllers](#routes--controllers)
+4. [Orders & line items](#orders--line-items)
+5. [Additional fixes](#additional-fixes)
+6. [SQLite setup](#sqlite-setup)
+7. [Install steps](#install-steps)
+8. [Design preview](#design-preview)
+9. [Known caveats](#known-caveats)
 
-One thing left as-is, worth knowing about: `Employee.status`, `Attendance.status`,
-`LeaveRequest.status`/`leave_type`, and `Payroll.status` are free-text `string` columns whose
-C# defaults are lowercase (`"active"`, `"pending"`, `"present"`), while the dropdowns in these
-views save whatever's capitalized in the `<option>` list (`"Active"`, `"Pending"`, ...). That's
-internally consistent — nothing in this project queries for the lowercase form — but if any of
-your other code filters on the lowercase default, you'll want to line up the casing.
+---
 
-## Why controllers were added, not just views
+## What’s included
 
-Of your original controllers, only `UserController.cs`, `DashboardController.cs`, and
-`HomeController.cs` returned Views. Everything else was a JSON API controller
-(`[ApiController] : ControllerBase`) with nothing for new views to bind to, so a parallel MVC
-controller was added per entity, following the same pattern `UsersController` already uses.
-**Your existing API controllers are untouched** — both now coexist, same as `UsersController`
-and `UsersApiController` already do.
+| Area | Contents |
+|------|----------|
+| **Views** | Index / Create / Edit / Details (and Delete where relevant) for each entity |
+| **MVC controllers** | One view controller per entity (API controllers left untouched) |
+| **Dashboard** | Live counts + recent logs |
+| **Styling** | Tailwind + Flowbite from CDN |
+| **Preview** | `design_preview.html` — static mock UI, open in any browser |
+
+**Entities covered:** Employees, Attendance, Leave Requests, Payroll, Orders, Products, Transactions, Suppliers, Logs, Settings, Users, Dashboard, Home/Login.
+
+---
+
+## Model alignment fixes
+
+After the first build failed, controllers and views were rebuilt against your actual model classes.
+
+### Supplier
+
+| Incorrect (assumed) | Actual model |
+|---------------------|--------------|
+| `supplier_name` | `name_of_supplier` |
+| `status`, `updated_at` | **Not present** |
+
+**Fields used:** `supplier_id`, `name_of_supplier`, `contact_person`, `email`, `phone`, `address`, `created_at`.
+
+### Enums (not raw ints)
+
+| Property | Type | Values |
+|----------|------|--------|
+| `Transaction.status` | `TransactionStatus` | `pending`, `completed`, `failed` |
+| `Transaction.payment_method` | `PaymentMethod` | `cash`, `card`, `bank_transfer` |
+| `Order.status` | `OrderStatus` | `pending`, `completed`, `cancelled` (3 values only) |
+
+Dropdowns and badges use `Enum.GetValues<T>()` and compare against enum members — no magic numbers.
+
+`DashboardController` previously compared statuses to raw ints (`o.status < 3`, `t.status == 1`) and was missing `using Erp.Models;`. Both are fixed.
+
+### Unchanged models
+
+These already matched field names: `Employee`, `Attendance`, `LeaveRequest`, `Payroll`, `Product`, `Setting`, `Log`, `User`.
+
+### String status casing
+
+`Employee.status`, `Attendance.status`, `LeaveRequest.status` / `leave_type`, and `Payroll.status` are **string** columns. C# defaults are lowercase (`"active"`, `"pending"`, `"present"`), while form dropdowns submit capitalized labels (`"Active"`, `"Pending"`, …).
+
+That is consistent within this UI package. If other code filters on the lowercase defaults, align casing in either the options or those queries.
+
+---
+
+## Routes & controllers
+
+Most original controllers were JSON API only (`[ApiController] : ControllerBase`). Parallel **MVC** controllers were added so views have something to bind to. **Existing API controllers are not modified.**
 
 | Route | Controller | Notes |
-|---|---|---|
+|-------|------------|--------|
 | `/employees` | `EmployeeViewController` | |
 | `/attendance` | `AttendanceViewController` | |
 | `/leave-requests` | `LeaveRequestViewController` | |
-| `/payroll` | `PayrollViewController` | uses the confirmed `Payroll.Employee` nav property |
-| `/orders` | `OrderViewController` | line items via a JSON hidden field, see below |
+| `/payroll` | `PayrollViewController` | Uses `Payroll.Employee` navigation |
+| `/orders` | `OrderViewController` | Line items via JSON hidden field |
 | `/products` | `ProductViewController` | |
-| `/transactions` | `TransactionViewController` | uses `Transaction.Order`, `TransactionStatus`, `PaymentMethod` |
+| `/transactions` | `TransactionViewController` | Uses `Transaction.Order`, enums |
 | `/suppliers` | `SupplierViewController` | |
-| `/logs` | `LogViewController` | read-only: Index/Details/Delete only |
-| `/settings` | `SettingViewController` | string primary key (`setting_key`) |
+| `/logs` | `LogViewController` | Read-only: Index / Details / Delete |
+| `/settings` | `SettingViewController` | String PK (`setting_key`) |
 
-`DashboardController.cs` also feeds the dashboard real counts (employees, pending leave, open
-orders, low-stock products, suppliers, this month's revenue) and the 6 most recent log entries.
+`DashboardController` supplies:
 
-## Orders — how the line-item editor works
+- Counts: employees, pending leave, open orders, low-stock products, suppliers  
+- This month’s revenue  
+- Six most recent log entries  
 
-`Order` has a `List<OrderItem> order_items` nav property. Binding a variable-length list of rows
-from a form with add/remove buttons is fragile with standard indexed field names, so instead:
+---
 
-- The Create/Edit page renders a JS-driven table (`Views/Orders/_OrderItemsEditor.cshtml`) with
-  add/remove rows and a live total.
-- On submit, JS serializes the current rows to JSON into a hidden `order_items_json` field.
-- `OrderViewController` deserializes that JSON server-side and reconciles it against the
-  database (`Edit` diffs against the existing items — anything missing from the submission gets
-  deleted, matching IDs get updated, `order_item_id == 0` gets inserted).
-- `total_amount` is always recomputed server-side from `quantity * price`, never trusted from
-  the client.
+## Orders & line items
 
-## Other fixes made along the way
+`Order` has `List<OrderItem> order_items`. Variable-length rows are awkward with classic indexed form names, so:
 
-- `Views/Users/Create.cshtml` posted without `@Html.AntiForgeryToken()` even though the
-  controller requires it — fixed.
-- `Views/Users/Edit.cshtml` never submitted `user_id`, so `id != updatedUser.user_id` in the
-  controller would always fail — fixed with a hidden field. `created_at` is also now carried
-  through as a hidden field so editing a user no longer silently resets their creation date.
-- Added the two views that were missing for existing actions: `Views/Users/Details.cshtml` and
-  `Views/Home/Login.cshtml` (mirrors `Home/Index`, which already serves as the sign-in page).
+1. Create/Edit uses a JS table (`Views/Orders/_OrderItemsEditor.cshtml`) with add/remove and a live total.
+2. On submit, JS writes the rows as JSON into a hidden `order_items_json` field.
+3. `OrderViewController` deserializes server-side and reconciles with the database:
+   - Missing rows → deleted  
+   - Matching IDs → updated  
+   - `order_item_id == 0` → inserted  
+4. **`total_amount` is always recomputed server-side** from `quantity * price` (client total is not trusted).
 
-## Switching to SQLite
+---
 
-`appsettings.json` in this bundle is already updated:
+## Additional fixes
+
+| Issue | Fix |
+|-------|-----|
+| `Views/Users/Create.cshtml` missing antiforgery | Added `@Html.AntiForgeryToken()` |
+| `Views/Users/Edit.cshtml` missing `user_id` | Hidden field so `id != updatedUser.user_id` no longer always fails |
+| Edit resetting `created_at` | `created_at` carried as a hidden field |
+| Missing views | Added `Views/Users/Details.cshtml`, `Views/Home/Login.cshtml` |
+
+---
+
+## SQLite setup
+
+`appsettings.json` in this bundle already uses:
 
 ```json
 "ConnectionStrings": {
@@ -98,46 +131,69 @@ from a form with add/remove buttons is fragile with standard indexed field names
 }
 ```
 
-Three more changes I can't make for you directly, since you haven't shared `Program.cs` or the
-`.csproj` — happy to do these too if you upload them, but here's exactly what to change:
+Three project-side changes (not applied here — needs your `Program.cs` / `.csproj`):
 
-**1. Swap the NuGet package** (run in the project folder):
+### 1. NuGet packages
+
 ```bash
 dotnet remove package Microsoft.EntityFrameworkCore.SqlServer
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 ```
 
-**2. In `Program.cs`, change the provider** — find where `ERPDbContext` is registered and change
-`UseSqlServer` to `UseSqlite`:
+### 2. Provider in `Program.cs`
+
 ```csharp
 // before
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+
 // after
-options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 ```
 
-**3. Regenerate migrations.** EF Core migrations are provider-specific, so your existing ones
-(written for SQL Server) can't be reused against SQLite:
+### 3. New migrations (provider-specific)
+
 ```bash
-rm -r Migrations
+rm -r Migrations   # or move them aside on Windows
 dotnet ef migrations add InitialSqlite
 dotnet ef database update
 ```
-This creates `erp.db` in your project folder on first run. One thing to know: SQLite doesn't
-enforce `decimal` precision the way SQL Server does, so the `decimal(12,2)`-style annotations in
-your models (`Order.total_amount`, `Transaction.amount`, etc.) are accepted but not strictly
-enforced at the database level — values still round-trip correctly, there's just no hard column
-constraint on scale.
 
-## Setup
+This creates `erp.db` in the project folder on first run.
 
-1. Copy `Controllers/`, `Views/`, and `appsettings.json` into your project, overwriting
-   `DashboardController.cs` and the `Views/Shared`, `Views/Home`, `Views/Dashboard`,
-   `Views/Users`, `Views/Suppliers`, `Views/Orders`, `Views/Transactions` folders.
-2. Beyond the SQLite steps above, nothing else changes — no `Program.cs` edits are needed for
-   the views/controllers themselves. They're plain `Controller` classes with `[Route]`
-   attributes, discovered the same way `UsersController` already is.
-3. Tailwind and Flowbite load from CDN (`cdn.tailwindcss.com`,
-   `cdnjs.cloudflare.com/ajax/libs/flowbite`), so nothing to `npm install`.
-4. `design_preview.html` (shared alongside this project) is a static, standalone preview with
-   mock data — open it directly in a browser to see the look before wiring anything up.
+**Note:** SQLite does not enforce `decimal(12,2)` the way SQL Server does. Annotations on `Order.total_amount`, `Transaction.amount`, etc. still round-trip; there is simply no hard scale constraint in the DB.
+
+---
+
+## Install steps
+
+1. Copy `Controllers/`, `Views/`, and `appsettings.json` into your project.  
+   Overwrite `DashboardController.cs` and the folders:  
+   `Views/Shared`, `Views/Home`, `Views/Dashboard`, `Views/Users`, `Views/Suppliers`, `Views/Orders`, `Views/Transactions` (and other entity view folders as needed).
+2. Complete the [SQLite setup](#sqlite-setup) if you are switching providers.
+3. No extra `Program.cs` wiring is required for these view controllers — they are normal `Controller` classes with `[Route]` attributes, discovered like existing MVC controllers.
+4. Tailwind and Flowbite load from CDN (`cdn.tailwindcss.com`, Flowbite on cdnjs) — no `npm install`.
+
+---
+
+## Design preview
+
+Open **`design_preview.html`** in a browser for a static mock of the admin UI (no backend required).
+
+---
+
+## Known caveats
+
+- String status/leave-type values may differ in casing between DB defaults and form options — keep them aligned if you filter in code.
+- Order line items depend on the hidden JSON field and server-side reconcile logic; do not bypass that with raw client totals.
+- API controllers and view controllers coexist by design; keep route prefixes distinct to avoid clashes.
+- Upload `Program.cs` and the `.csproj` if you want the SQLite / DI edits applied in-repo next.
+
+---
+
+## Quick start checklist
+
+- [ ] Copy Controllers + Views + `appsettings.json`
+- [ ] Switch EF provider to SQLite (if desired) and regenerate migrations
+- [ ] Run the app and open `/` or `/dashboard`
+- [ ] Sign in via Home/Login
+- [ ] Smoke-test: Users, Suppliers, Orders (with line items), Transactions, Dashboard counts
