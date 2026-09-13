@@ -1,0 +1,61 @@
+@model Erp.Models.User
+@{
+    ViewData["Title"] = "User details";
+    ViewData["Section"] = "Administration";
+    ViewData["ActiveNav"] = "Users";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+        <a href="@Url.Action("Index", "Users")" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700">
+            @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+            Users
+        </a>
+        <h2 class="mt-2 text-lg font-semibold text-slate-900">@Model.username</h2>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="@Url.Action("Edit", "Users", new { id = Model.user_id })" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            @await Html.PartialAsync("_Icon", "pencil|h-4 w-4")
+            Edit
+        </a>
+        <a href="@Url.Action("Delete", "Users", new { id = Model.user_id })" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50">
+            @await Html.PartialAsync("_Icon", "trash|h-4 w-4")
+            Delete
+        </a>
+    </div>
+</div>
+
+<div class="max-w-2xl overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div class="flex items-center gap-4 border-b border-slate-100 bg-slate-50/60 px-6 py-5">
+        <span class="flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-lg font-semibold text-white">
+            @(Model.username.Length > 0 ? Model.username.Substring(0, 1).ToUpper() : "?")
+        </span>
+        <div>
+            <p class="text-base font-semibold text-slate-900">@Model.username</p>
+            <p class="text-sm text-slate-500">@Model.email</p>
+        </div>
+    </div>
+    <dl class="divide-y divide-slate-100">
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Role</dt>
+            <dd class="col-span-2">@await Html.PartialAsync("_StatusBadge", Model.role)</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Status</dt>
+            <dd class="col-span-2">@await Html.PartialAsync("_StatusBadge", Model.isActive ? "Active" : "Inactive")</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">User ID</dt>
+            <dd class="col-span-2 font-mono text-sm text-slate-700">#@Model.user_id</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Created</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.created_at.ToString("MMM d, yyyy 'at' h:mm tt")</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Last updated</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.updated_at.ToString("MMM d, yyyy 'at' h:mm tt")</dd>
+        </div>
+    </dl>
+</div>

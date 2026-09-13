@@ -20,5 +20,26 @@ namespace Erp.Data
         public DbSet<Log> Logs { get; set; }
         public DbSet<Setting> Settings { get; set; }
         public DbSet<Supplier> Suppliers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // 🔧 Fix decimal precision warnings
+
+            modelBuilder.Entity<Employee>()
+                .Property(e => e.salary)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payroll>()
+                .Property(p => p.gross_salary)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payroll>()
+                .Property(p => p.tax)
+                .HasPrecision(18, 2);
+
+            // Add more precision settings here as needed
+        }
     }
 }

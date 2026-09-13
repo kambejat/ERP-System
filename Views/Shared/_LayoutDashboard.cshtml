@@ -1,151 +1,204 @@
+@using System.Security.Claims
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="h-full bg-slate-50">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ERP Dashboard</title>
+    <title>@ViewData["Title"] · ERP Console</title>
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@@400;500;600&family=IBM+Plex+Sans:wght@@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"IBM Plex Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                        mono: ['"IBM Plex Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+                    },
+                }
+            }
+        }
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
-
-    <meta name="theme-color" content="#712cf9">
     <style>
-        body {
-            font-size: 0.9rem;
-        }
-        .sidebar {
-            min-height: 100vh;
-        }
-        .sidebar .nav-link.active {
-            background-color: #f8f9fa;
-            font-weight: 600;
-        }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.25rem;
-        }
-        main {
-            padding-top: 1rem;
-        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 9999px; }
+        ::-webkit-scrollbar-track { background-color: transparent; }
+        [data-fade] { animation: erp-fade .15s ease-out; }
+        @@keyframes erp-fade { from { opacity: 0; transform: translateY(-2px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
+<body class="h-full font-sans text-slate-800 antialiased">
+@{
+    var active = ViewData["ActiveNav"] as string ?? "";
+    var navGroups = new (string Section, (string Key, string Label, string Url, string Icon)[] Items)[]
+    {
+        ("Overview", new[] { ("Dashboard", "Dashboard", "/dashboard", "home") }),
+        ("Human resources", new[] {
+            ("Employees", "Employees", "/employees", "briefcase"),
+            ("Attendance", "Attendance", "/attendance", "clock"),
+            ("LeaveRequests", "Leave requests", "/leave-requests", "calendar"),
+            ("Payroll", "Payroll", "/payroll", "banknote"),
+        }),
+        ("Operations", new[] {
+            ("Orders", "Orders", "/orders", "cart"),
+            ("Products", "Products", "/products", "cube"),
+            ("Transactions", "Transactions", "/transactions", "card"),
+            ("Suppliers", "Suppliers", "/suppliers", "truck"),
+        }),
+        ("Administration", new[] {
+            ("Users", "Users", "/users", "users"),
+            ("Logs", "Activity logs", "/logs", "clipboard"),
+            ("Settings", "Settings", "/settings", "cog"),
+        }),
+    };
+    var userName = User?.Identity?.IsAuthenticated == true ? User.Identity.Name : null;
+    var userRole = User?.FindFirst(ClaimTypes.Role)?.Value;
+    var initials = string.IsNullOrWhiteSpace(userName) ? "?" : string.Concat(userName.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).Take(2).Select(s => char.ToUpper(s[0])));
+}
+<div class="min-h-full">
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden bg-slate-900/50 lg:hidden"></div>
 
-<body>
-    <!-- Top Navbar -->
-    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">Company Name</a>
-        <button class="navbar-toggler d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <input class="form-control form-control-dark w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
-    </header>
+    <!-- Sidebar -->
+    <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-slate-900 transition-transform duration-200 ease-in-out lg:translate-x-0">
+        <div class="flex h-16 flex-shrink-0 items-center gap-2.5 px-5">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-500/15 text-teal-400">
+                @await Html.PartialAsync("_Icon", "layers|h-5 w-5")
+            </span>
+            <span class="text-[15px] font-semibold tracking-tight text-white">ERP Console</span>
+        </div>
+        <nav class="flex-1 overflow-y-auto px-3 pb-4">
+            @foreach (var group in navGroups)
+            {
+                <div class="mt-5 first:mt-1">
+                    <p class="px-3 text-[11px] font-medium text-slate-500">@group.Section</p>
+                    <div class="mt-1.5 space-y-0.5">
+                        @foreach (var item in group.Items)
+                        {
+                            var isActive = active == item.Key;
+                            var linkClasses = isActive
+                                ? "bg-slate-800 text-white"
+                                : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-100";
+                            <a href="@item.Url" class="group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors @linkClasses">
+                                <span class="@(isActive ? "text-teal-400" : "text-slate-500 group-hover:text-slate-300")">
+                                    @await Html.PartialAsync("_Icon", item.Icon + "|h-[18px] w-[18px]")
+                                </span>
+                                @item.Label
+                            </a>
+                        }
+                    </div>
+                </div>
+            }
+        </nav>
+        <div class="flex-shrink-0 border-t border-slate-800 p-3">
+            <form asp-controller="Users" asp-action="Logout" method="post">
+                <button type="submit" class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-400 transition-colors hover:bg-slate-800/60 hover:text-slate-100">
+                    @await Html.PartialAsync("_Icon", "sign-out|h-[18px] w-[18px] text-slate-500")
+                    Sign out
+                </button>
+            </form>
+        </div>
+    </aside>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
-                <div class="position-sticky pt-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
-                                <i class="bi bi-house-fill me-2"></i>
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                Orders
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-cart me-2"></i>
-                                Products
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-people me-2"></i>
-                                Customers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-bar-chart-line me-2"></i>
-                                Reports
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-puzzle-fill me-2"></i>
-                                Integrations
-                            </a>
-                        </li>
-                    </ul>
+    <!-- Topbar + content -->
+    <div class="flex min-h-full flex-col lg:pl-64">
+        <header class="sticky top-0 z-20 flex h-16 flex-shrink-0 items-center gap-4 border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6 lg:px-8">
+            <button id="sidebar-open" type="button" class="text-slate-500 hover:text-slate-700 lg:hidden" aria-label="Open menu">
+                @await Html.PartialAsync("_Icon", "menu|h-6 w-6")
+            </button>
+            <div class="min-w-0 flex-1">
+                @if (ViewData["Section"] != null)
+                {
+                    <p class="text-xs font-medium text-slate-400">@ViewData["Section"]</p>
+                }
+                <h1 class="truncate text-base font-semibold text-slate-900">@ViewData["Title"]</h1>
+            </div>
 
-                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
-                        <span>Saved Reports</span>
-                        <a class="link-secondary" href="#" aria-label="Add a new report">
-                            <i class="bi bi-plus-circle"></i>
-                        </a>
-                    </h6>
-                    <ul class="nav flex-column mb-2">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                Current month
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                Last quarter
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                Social engagement
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="bi bi-file-earmark-text me-2"></i>
-                                Year-end sale
-                            </a>
-                        </li>
-                    </ul>
-
-                    <hr>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/users">
-                                <i class="bi bi-gear me-2"></i>
+            <div class="relative flex-shrink-0">
+                <button id="user-menu-button" data-dropdown-toggle="user-menu" type="button" class="flex items-center gap-2.5 rounded-lg py-1.5 pl-1.5 pr-2 hover:bg-slate-100">
+                    <span class="flex h-8 w-8 items-center justify-center rounded-full bg-teal-600 text-xs font-semibold text-white">@initials</span>
+                    <span class="hidden text-left sm:block">
+                        <span class="block text-sm font-medium leading-tight text-slate-700">@(userName ?? "Account")</span>
+                        <span class="block text-xs leading-tight text-slate-400">@(userRole ?? "Signed in")</span>
+                    </span>
+                    @await Html.PartialAsync("_Icon", "chevron-down|hidden h-4 w-4 text-slate-400 sm:block")
+                </button>
+                <div id="user-menu" class="z-50 hidden w-48 divide-y divide-slate-100 rounded-lg border border-slate-200 bg-white shadow-lg" data-fade>
+                    <div class="px-4 py-3">
+                        <p class="truncate text-sm font-medium text-slate-800">@(userName ?? "Account")</p>
+                        <p class="truncate text-xs text-slate-400">@(userRole ?? "—")</p>
+                    </div>
+                    <ul class="py-1 text-sm text-slate-600">
+                        <li>
+                            <a href="/settings" class="flex items-center gap-2 px-4 py-2 hover:bg-slate-50">
+                                @await Html.PartialAsync("_Icon", "cog|h-4 w-4 text-slate-400")
                                 Settings
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-danger" href="#">
-                                <i class="bi bi-box-arrow-right me-2"></i>
-                                Sign out
-                            </a>
-                        </li>
                     </ul>
+                    <div class="py-1">
+                        <form asp-controller="Users" asp-action="Logout" method="post">
+                            <button type="submit" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-600 hover:bg-rose-50">
+                                @await Html.PartialAsync("_Icon", "sign-out|h-4 w-4")
+                                Sign out
+                            </button>
+                        </form>
+                    </div>
                 </div>
-            </nav>
+            </div>
+        </header>
 
-            <!-- Main Content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                @RenderBody()
-            </main>
-        </div>
+        <main class="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+            @await Html.PartialAsync("_Alerts")
+            @RenderBody()
+        </main>
     </div>
+</div>
 
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.5.2/flowbite.min.js"></script>
+<script>
+    (function () {
+        var sidebar = document.getElementById('app-sidebar');
+        var overlay = document.getElementById('sidebar-overlay');
+        var openBtn = document.getElementById('sidebar-open');
+
+        function openSidebar() {
+            sidebar.classList.remove('-translate-x-full');
+            overlay.classList.remove('hidden');
+        }
+        function closeSidebar() {
+            sidebar.classList.add('-translate-x-full');
+            overlay.classList.add('hidden');
+        }
+        if (openBtn) openBtn.addEventListener('click', openSidebar);
+        if (overlay) overlay.addEventListener('click', closeSidebar);
+
+        // Generic client-side table search: any input with [data-table-search]
+        // filters rows of the <table> referenced by its data-target selector.
+        document.querySelectorAll('[data-table-search]').forEach(function (input) {
+            var table = document.querySelector(input.getAttribute('data-table-search'));
+            if (!table) return;
+            var emptyRow = table.querySelector('[data-empty-row]');
+            input.addEventListener('input', function () {
+                var q = input.value.trim().toLowerCase();
+                var rows = table.querySelectorAll('tbody tr:not([data-empty-row])');
+                var visible = 0;
+                rows.forEach(function (row) {
+                    var match = row.textContent.toLowerCase().indexOf(q) !== -1;
+                    row.classList.toggle('hidden', !match);
+                    if (match) visible++;
+                });
+                if (emptyRow) emptyRow.classList.toggle('hidden', visible !== 0 || q === '');
+            });
+        });
+    })();
+</script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

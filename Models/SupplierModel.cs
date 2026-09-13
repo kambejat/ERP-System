@@ -22,9 +22,16 @@ namespace Erp.Models
         public string? phone { get; set; }
         [MaxLength(255)]
         [Column("address")]
+
+        public string? status { get; set; }
+        [MaxLength(255)]
+        [Column("status")]
         public string? address { get;  set; }
         [Column("created_at")]
         public DateTime created_at { get; set; } = DateTime.UtcNow;
+
+        public DateTime updated_at { get; set; } = DateTime.UtcNow;
+    
     } 
 }
 

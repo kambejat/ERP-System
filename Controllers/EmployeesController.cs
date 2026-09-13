@@ -97,5 +97,12 @@ namespace Erp.Controllers
         {
             return _context.Employees.Any(e => e.employee_id == id);
         }
+
+        [HttpGet("Index")]
+        public async Task<ActionResult<IEnumerable<Employee>>> Index()
+        {
+            var employees = await _context.Employees.ToListAsync();
+            return Ok(employees);
+        }
     }
 }

@@ -1,0 +1,60 @@
+@model Erp.Models.Supplier
+@{
+    ViewData["Title"] = "Supplier details";
+    ViewData["Section"] = "Operations";
+    ViewData["ActiveNav"] = "Suppliers";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+        <a href="/suppliers" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700">
+    @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+    Suppliers
+</a>
+        <h2 class="mt-2 text-lg font-semibold text-slate-900">@Model.name_of_supplier</h2>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="/suppliers/edit/@Model.supplier_id" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            @await Html.PartialAsync("_Icon", "pencil|h-4 w-4") Edit
+        </a>
+        <a href="/suppliers/delete/@Model.supplier_id" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50">
+            @await Html.PartialAsync("_Icon", "trash|h-4 w-4") Delete
+        </a>
+    </div>
+</div>
+
+<div class="max-w-2xl overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div class="flex items-center gap-4 border-b border-slate-100 bg-slate-50/60 px-6 py-5">
+        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
+            @await Html.PartialAsync("_Icon", "truck|h-5 w-5")
+        </span>
+        <p class="text-base font-semibold text-slate-900">@Model.name_of_supplier</p>
+    </div>
+    <dl class="divide-y divide-slate-100">
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Supplier name</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.name_of_supplier</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Contact person</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(string.IsNullOrEmpty(Model.contact_person) ? "—" : Model.contact_person)</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Email</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(string.IsNullOrEmpty(Model.email) ? "—" : Model.email)</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Phone</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(string.IsNullOrEmpty(Model.phone) ? "—" : Model.phone)</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Address</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(string.IsNullOrEmpty(Model.address) ? "—" : Model.address)</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Added</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.created_at.ToString("MMM d, yyyy")</dd>
+        </div>
+    </dl>
+</div>

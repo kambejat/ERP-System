@@ -2,57 +2,67 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// MVC / Controllers
 builder.Services.AddControllersWithViews();
 
-// Add DbContext for SQL Server
+// Database
 builder.Services.AddDbContext<Erp.Data.ERPDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddControllers();
+    options.UseSqlite(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    ));
 
-
+// CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        builder
-            .AllowAnyOrigin()   // Allows requests from any origin (no restrictions)
-            .AllowAnyHeader()   // Allows any HTTP headers
-            .AllowAnyMethod();  // Allows GET, POST, PUT, DELETE, etc.
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
-builder.Services.AddAuthentication("Cookies")
+// Authentication
+builder.Services
+    .AddAuthentication("Cookies")
     .AddCookie("Cookies", options =>
     {
-        options.LoginPath = "/Home/Login"; // Redirect to login if not authenticated
+        options.LoginPath = "/Home/Login";
         options.LogoutPath = "/Home/Logout";
         options.AccessDeniedPath = "/Users/AccessDenied";
     });
 
+// Authorization
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Error handling
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+// IMPORTANT:
+// Temporarily disabled while fixing the 404/HTTPS issue.
+// app.UseHttpsRedirection();
+
+app.UseStaticFiles();
+
 app.UseRouting();
 
+app.UseCors("AllowAll");
+
+// Authentication MUST come before Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
-
-app.MapStaticAssets();
-
+// MVC routing
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.Run();

@@ -82,6 +82,7 @@ namespace Erp.Controllers
         }
 
         // POST: Users/Create
+        [ValidateAntiForgeryToken]
         [HttpPost("create")]
         public async Task<IActionResult> Create(User newUser)
         {
@@ -101,8 +102,10 @@ namespace Erp.Controllers
                 return RedirectToAction("Index");
             }
 
+            // Validation errors or model state errors will return here
             return View(newUser);
         }
+
 
         // GET: Users/Details/{id}
         [HttpGet("details/{id}")]
@@ -185,7 +188,7 @@ namespace Erp.Controllers
             if (!string.IsNullOrEmpty(search))
             {
                 usersQuery = usersQuery.Where(u =>
-                    u.username.Contains(search) || u.role.Contains(search));
+                   string.IsNullOrEmpty(search) || u.username.Contains(search) || u.role.Contains(search));
             }
 
             var users = await usersQuery.ToListAsync();

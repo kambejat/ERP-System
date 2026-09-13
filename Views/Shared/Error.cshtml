@@ -1,25 +1,27 @@
-﻿@model ErrorViewModel
+@model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Something went wrong";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+<div class="text-center">
+    <span class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-rose-50 text-rose-500">
+        @await Html.PartialAsync("_Icon", "alert-triangle|h-6 w-6")
+    </span>
+    <h1 class="mt-4 text-lg font-semibold text-slate-900">Something went wrong</h1>
+    <p class="mt-1.5 text-sm text-slate-500">
+        We hit an unexpected error while processing that request. Try again, and let an administrator know if it keeps happening.
     </p>
-}
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    @if (Model != null && Model.ShowRequestId)
+    {
+        <p class="mt-4 rounded-lg bg-slate-50 px-3 py-2 font-mono text-xs text-slate-500">
+            Request ID: <span class="text-slate-700">@Model.RequestId</span>
+        </p>
+    }
+
+    <a href="/dashboard" class="mt-6 inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-700">
+        @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+        Back to dashboard
+    </a>
+</div>

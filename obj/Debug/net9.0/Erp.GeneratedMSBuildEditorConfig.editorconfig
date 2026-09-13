@@ -15,71 +15,286 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v9.0
+build_property.EntryPointFilePath = 
 build_property.RootNamespace = Erp
 build_property.RootNamespace = Erp
-build_property.ProjectDir = C:\Users\Trevor Kambeja\Projects\NetERP\Erp\
+build_property.ProjectDir = D:\Projects\NetERP\Erp\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\Trevor Kambeja\Projects\NetERP\Erp
+build_property.MSBuildProjectDirectory = D:\Projects\NetERP\Erp
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 9.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Dashboard/Index.cshtml]
+[D:/Projects/NetERP/Erp/Views/AttendanceView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZVZpZXdcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/AttendanceView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZVZpZXdcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/AttendanceView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZVZpZXdcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/AttendanceView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZVZpZXdcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/AttendanceView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXR0ZW5kYW5jZVZpZXdcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Home/Index.cshtml]
+[D:/Projects/NetERP/Erp/Views/EmployeeView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVWaWV3XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/EmployeeView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVWaWV3XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/EmployeeView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVWaWV3XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/EmployeeView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVWaWV3XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/EmployeeView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVWaWV3XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Home/Privacy.cshtml]
+[D:/Projects/NetERP/Erp/Views/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Shared/Error.cshtml]
+[D:/Projects/NetERP/Erp/Views/LeaveRequestView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0Vmlld1xDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LeaveRequestView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0Vmlld1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LeaveRequestView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0Vmlld1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LeaveRequestView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0Vmlld1xFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LeaveRequestView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGVhdmVSZXF1ZXN0Vmlld1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LogView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nVmlld1xEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LogView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nVmlld1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/LogView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9nVmlld1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/OrderView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJWaWV3XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/OrderView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJWaWV3XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/OrderView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJWaWV3XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/OrderView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJWaWV3XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/OrderView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJWaWV3XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/OrderView/_OrderItemsEditor.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJWaWV3XF9PcmRlckl0ZW1zRWRpdG9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/PayrollView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFZpZXdcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/PayrollView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFZpZXdcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/PayrollView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFZpZXdcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/PayrollView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFZpZXdcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/PayrollView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGF5cm9sbFZpZXdcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/ProductView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFZpZXdcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/ProductView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFZpZXdcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/ProductView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFZpZXdcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/ProductView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFZpZXdcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/ProductView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFZpZXdcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SettingView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0dGluZ1ZpZXdcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SettingView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0dGluZ1ZpZXdcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SettingView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0dGluZ1ZpZXdcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SettingView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2V0dGluZ1ZpZXdcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Shared/_LayoutDashboard.cshtml]
+[D:/Projects/NetERP/Erp/Views/Shared/_Alerts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BbGVydHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Shared/_Icon.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9JY29uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Shared/_LayoutDashboard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXREYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/Projects/NetERP/Erp/Views/Shared/_StatusBadge.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9TdGF0dXNCYWRnZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Users/Create.cshtml]
+[D:/Projects/NetERP/Erp/Views/SupplierView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJWaWV3XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SupplierView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJWaWV3XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SupplierView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJWaWV3XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SupplierView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJWaWV3XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/SupplierView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJWaWV3XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/TransactionView/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25WaWV3XENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/TransactionView/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25WaWV3XERlbGV0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/TransactionView/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25WaWV3XERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/TransactionView/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25WaWV3XEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/TransactionView/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVHJhbnNhY3Rpb25WaWV3XEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Users/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Users/Delete.cshtml]
+[D:/Projects/NetERP/Erp/Views/Users/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Users/Edit.cshtml]
+[D:/Projects/NetERP/Erp/Views/Users/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRGV0YWlscy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Projects/NetERP/Erp/Views/Users/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Users/Index.cshtml]
+[D:/Projects/NetERP/Erp/Views/Users/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Users/Manage.cshtml]
+[D:/Projects/NetERP/Erp/Views/Users/Manage.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXNlcnNcTWFuYWdlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/_ViewImports.cshtml]
+[D:/Projects/NetERP/Erp/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/_ViewStart.cshtml]
+[D:/Projects/NetERP/Erp/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Trevor Kambeja/Projects/NetERP/Erp/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-vqv4qz75gz

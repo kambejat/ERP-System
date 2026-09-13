@@ -7,10 +7,11 @@ namespace Erp.Models
     {
         [Key]
         [Column("setting_key")]
-        public string? setting_key { get; set; }
+        [Required]
+        public string setting_key { get; set; } = string.Empty;
 
         [Required]
         [Column("setting_value")]
-        public string? setting_value { get; set; }
+        public string setting_value { get; set; } = string.Empty;
     }
 }

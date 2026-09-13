@@ -3,7 +3,6 @@ using System;
 using Erp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -16,48 +15,42 @@ namespace Erp.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
-
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
 
             modelBuilder.Entity("Erp.Models.Attendance", b =>
                 {
                     b.Property<int>("attendance_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("attendance_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("attendance_id"));
-
                     b.Property<DateTime?>("check_in")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("check_in");
 
                     b.Property<DateTime?>("check_out")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("check_out");
 
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime>("date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("date");
 
                     b.Property<int>("employee_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("employee_id");
 
                     b.Property<string>("status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("status");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
                     b.HasKey("attendance_id");
@@ -71,61 +64,60 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("employee_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("employee_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("employee_id"));
-
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<string>("department")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("department");
 
                     b.Property<string>("email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<string>("first_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("first_name");
 
                     b.Property<DateTime>("hire_date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("hire_date");
 
                     b.Property<string>("job_title")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("job_title");
 
                     b.Property<string>("last_name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("last_name");
 
                     b.Property<string>("phone")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("phone");
 
                     b.Property<decimal?>("salary")
-                        .HasColumnType("decimal(18,2)")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("TEXT")
                         .HasColumnName("salary");
 
                     b.Property<string>("status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("status");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
                     b.Property<int?>("user_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
                     b.HasKey("employee_id");
@@ -139,38 +131,36 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("leave_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("leave_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("leave_id"));
-
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<int>("employee_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("employee_id");
 
                     b.Property<DateTime>("end_date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("end_date");
 
                     b.Property<string>("leave_type")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("leave_type");
 
                     b.Property<DateTime>("start_date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("start_date");
 
                     b.Property<string>("status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("status");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
                     b.HasKey("leave_id");
@@ -184,22 +174,20 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("log_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("log_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("log_id"));
 
                     b.Property<string>("action")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("action");
 
                     b.Property<DateTime>("timestamp")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("timestamp");
 
                     b.Property<int>("user_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
                     b.HasKey("log_id");
@@ -213,21 +201,19 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("order_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("order_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_id"));
-
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<DateTime>("order_date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("order_date");
 
                     b.Property<int>("status")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("status");
 
                     b.Property<decimal>("total_amount")
@@ -235,11 +221,11 @@ namespace Erp.Migrations
                         .HasColumnName("total_amount");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
                     b.Property<int>("user_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
                     b.HasKey("order_id");
@@ -253,13 +239,11 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("order_item_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("order_item_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("order_item_id"));
-
                     b.Property<int>("order_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("order_id");
 
                     b.Property<decimal>("price")
@@ -267,11 +251,11 @@ namespace Erp.Migrations
                         .HasColumnName("price");
 
                     b.Property<int>("product_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("product_id");
 
                     b.Property<int>("quantity")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("quantity");
 
                     b.HasKey("order_item_id");
@@ -287,38 +271,38 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("payroll_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("payroll_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("payroll_id"));
-
                     b.Property<int>("employee_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("employee_id");
 
                     b.Property<decimal>("gross_salary")
-                        .HasColumnType("decimal(18,2)")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("TEXT")
                         .HasColumnName("gross_salary");
 
                     b.Property<DateTime>("pay_period_end")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("pay_period_end");
 
                     b.Property<DateTime>("pay_period_start")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("pay_period_start");
 
                     b.Property<DateTime>("processed_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("processed_at");
 
                     b.Property<string>("status")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("status");
 
                     b.Property<decimal>("tax")
-                        .HasColumnType("decimal(18,2)")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("TEXT")
                         .HasColumnName("tax");
 
                     b.HasKey("payroll_id");
@@ -332,28 +316,26 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("product_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("product_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("product_id"));
 
                     b.Property<string>("category")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("category");
 
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<string>("description")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("description");
 
                     b.Property<string>("name_of_product")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("name_of_product");
 
                     b.Property<decimal>("price")
@@ -361,20 +343,20 @@ namespace Erp.Migrations
                         .HasColumnName("price");
 
                     b.Property<int>("quantity_in_stock")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("quantity_in_stock");
 
                     b.Property<int>("reorder_level")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("reorder_level");
 
                     b.Property<string>("sku")
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("sku");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
                     b.HasKey("product_id");
@@ -385,12 +367,12 @@ namespace Erp.Migrations
             modelBuilder.Entity("Erp.Models.Setting", b =>
                 {
                     b.Property<string>("setting_key")
-                        .HasColumnType("nvarchar(450)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("setting_key");
 
                     b.Property<string>("setting_value")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("setting_value");
 
                     b.HasKey("setting_key");
@@ -402,39 +384,45 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("supplier_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("supplier_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("supplier_id"));
 
                     b.Property<string>("address")
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("address");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("status");
 
                     b.Property<string>("contact_person")
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("contact_person");
 
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<string>("email")
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<string>("name_of_supplier")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("name_of_supplier");
 
                     b.Property<string>("phone")
                         .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("phone");
+
+                    b.Property<string>("status")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT")
+                        .HasColumnName("address");
+
+                    b.Property<DateTime>("updated_at")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("supplier_id");
 
@@ -445,29 +433,27 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("transaction_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("transaction_id");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("transaction_id"));
 
                     b.Property<decimal>("amount")
                         .HasColumnType("decimal(12, 2)")
                         .HasColumnName("amount");
 
                     b.Property<int>("order_id")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("order_id");
 
                     b.Property<int>("payment_method")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("payment_method");
 
                     b.Property<int>("status")
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("status");
 
                     b.Property<DateTime>("transaction_date")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("transaction_date");
 
                     b.HasKey("transaction_id");
@@ -481,47 +467,48 @@ namespace Erp.Migrations
                 {
                     b.Property<int>("user_id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("user_id");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("user_id"));
-
                     b.Property<DateTime>("created_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("created_at");
 
                     b.Property<string>("email")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("email");
 
                     b.Property<bool>("isActive")
-                        .HasColumnType("bit")
+                        .HasColumnType("INTEGER")
                         .HasColumnName("isActive");
 
                     b.Property<string>("password_hash")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("password_hash");
 
                     b.Property<string>("role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("role");
 
                     b.Property<DateTime>("updated_at")
-                        .HasColumnType("datetime2")
+                        .HasColumnType("TEXT")
                         .HasColumnName("updated_at");
 
                     b.Property<string>("username")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)")
+                        .HasColumnType("TEXT")
                         .HasColumnName("username");
 
                     b.HasKey("user_id");
+
+                    b.HasIndex("username")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });

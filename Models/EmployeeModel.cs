@@ -17,7 +17,7 @@ namespace Erp.Models
 
         [Required]
         [Column("first_name")]
-        public string? first_name { get; set; }
+        public string first_name { get; set; } = string.Empty;
 
         [Required]
         [Column("last_name")]

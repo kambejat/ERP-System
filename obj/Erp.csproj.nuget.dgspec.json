@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\Erp.csproj": {}
+    "D:\\Projects\\NetERP\\Erp\\Erp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\Erp.csproj": {
+    "D:\\Projects\\NetERP\\Erp\\Erp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\Erp.csproj",
+        "projectUniqueName": "D:\\Projects\\NetERP\\Erp\\Erp.csproj",
         "projectName": "Erp",
-        "projectPath": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\Erp.csproj",
-        "packagesPath": "C:\\Users\\Trevor Kambeja\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Trevor Kambeja\\Projects\\NetERP\\Erp\\obj\\",
+        "projectPath": "D:\\Projects\\NetERP\\Erp\\Erp.csproj",
+        "packagesPath": "C:\\Users\\kambe\\.nuget\\packages\\",
+        "outputPath": "D:\\Projects\\NetERP\\Erp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Trevor Kambeja\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\kambe\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -24,6 +24,7 @@
         },
         "frameworks": {
           "net9.0": {
+            "framework": "net9.0",
             "targetAlias": "net9.0",
             "projectReferences": {}
           }
@@ -38,10 +39,11 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
         "net9.0": {
+          "framework": "net9.0",
           "targetAlias": "net9.0",
           "dependencies": {
             "BCrypt.Net-Next": {
@@ -58,7 +60,7 @@
               "target": "Package",
               "version": "[9.0.3, )"
             },
-            "Microsoft.EntityFrameworkCore.SqlServer": {
+            "Microsoft.EntityFrameworkCore.Sqlite": {
               "target": "Package",
               "version": "[9.0.3, )"
             },
@@ -80,6 +82,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.16, 9.0.16]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[9.0.16, 9.0.16]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.16, 9.0.16]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[9.0.16, 9.0.16]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -88,7 +108,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

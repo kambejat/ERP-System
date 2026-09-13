@@ -1,46 +1,74 @@
 @model Erp.Models.User
-
 @{
-    ViewData["Title"] = "Edit Users";
+    ViewData["Title"] = "Edit user";
+    ViewData["Section"] = "Administration";
+    ViewData["ActiveNav"] = "Users";
     Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+    var roles = new List<string> { "Admin", "Manager", "Staff" };
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<form method="post">
-    <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" value="@Model.username" required maxlength="50" />
-    </div>
-
-    <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" id="email" name="email" value="@Model.email" required maxlength="100" />
-    </div>
-
-    <div class="mb-3">
-        <label for="password_hash" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password_hash" name="password_hash" value="@Model.password_hash" required maxlength="255" />
-    </div>
-
-    <div class="mb-3">
-    <label for="role" class="form-label">Role</label>
-    <select class="form-select" id="role" name="role" required>
-        <option value="Admin" @(Model.role == "Admin" ? "selected" : "")>Admin</option>
-        <option value="Manager" @(Model.role == "Manager" ? "selected" : "")>Manager</option>
-        <option value="Staff" @(Model.role == "Staff" ? "selected" : "")>Staff</option>
-    </select>
-    <div class="invalid-feedback">
-        Please select a role.
-    </div>
+<div class="mb-6">
+    <a href="@Url.Action("Index", "Users")" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700">
+        @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+        Users
+    </a>
+    <h2 class="mt-2 text-lg font-semibold text-slate-900">Edit @Model.username</h2>
+    <p class="mt-1 text-sm text-slate-500">Update account details and access role.</p>
 </div>
 
-    <div class="mb-3">
-        <label for="isActive" class="form-label">Active Status</label>
-        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" @if(Model.isActive) { <text>checked</text> } />
-        <label class="form-check-label" for="isActive">Is Active</label>
-    </div>
+<div class="max-w-2xl rounded-xl border border-slate-200 bg-white p-6">
+    <form asp-controller="Users" asp-action="Edit" asp-route-id="@Model.user_id" method="post" class="space-y-5">
+        @* Hidden fields: the controller marks the whole entity as Modified from whatever the form submits,
+           so we round-trip the primary key and created_at rather than let them silently reset. *@
+        <input type="hidden" asp-for="user_id" />
+        <input type="hidden" asp-for="created_at" />
+        <input type="hidden" asp-for="updated_at" value="@DateTime.UtcNow.ToString("o")" />
 
-    <button type="submit" class="btn btn-primary">Save Changes</button>
-    <a href="@Url.Action("Index", "Users")" class="btn btn-secondary">Cancel</a>
-</form>
+        <div>
+            <label asp-for="username" class="mb-1.5 block text-sm font-medium text-slate-700">Username</label>
+            <input asp-for="username" required maxlength="50"
+                   class="block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+            <span asp-validation-for="username" class="mt-1 block text-xs text-rose-600"></span>
+        </div>
+
+        <div>
+            <label asp-for="email" class="mb-1.5 block text-sm font-medium text-slate-700">Email</label>
+            <input asp-for="email" type="email" required maxlength="100"
+                   class="block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+            <span asp-validation-for="email" class="mt-1 block text-xs text-rose-600"></span>
+        </div>
+
+        <div>
+            <label asp-for="password_hash" class="mb-1.5 block text-sm font-medium text-slate-700">Password</label>
+            <input asp-for="password_hash" type="password" required maxlength="255"
+                   class="block w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+            <span asp-validation-for="password_hash" class="mt-1 block text-xs text-rose-600"></span>
+        </div>
+
+        <div>
+            <label asp-for="role" class="mb-1.5 block text-sm font-medium text-slate-700">Role</label>
+            <select asp-for="role" required class="block w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500">
+                @foreach (var role in roles)
+                {
+                    <option value="@role" selected="@(Model.role == role)">@role</option>
+                }
+            </select>
+            <span asp-validation-for="role" class="mt-1 block text-xs text-rose-600"></span>
+        </div>
+
+        <label class="flex cursor-pointer items-center gap-3">
+            <input asp-for="isActive" type="checkbox"
+                   class="h-4 w-4 rounded border-slate-300 text-teal-600 focus:ring-teal-500" />
+            <span class="text-sm text-slate-700">Active — user can sign in</span>
+        </label>
+
+        <div class="flex items-center gap-3 border-t border-slate-100 pt-5">
+            <button type="submit" class="rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-700">Save changes</button>
+            <a href="@Url.Action("Index", "Users")" class="rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

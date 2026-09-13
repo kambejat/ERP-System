@@ -1,0 +1,88 @@
+@model Erp.Models.Order
+@{
+    ViewData["Title"] = "Order details";
+    ViewData["Section"] = "Operations";
+    ViewData["ActiveNav"] = "Orders";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+    var userNames = (Dictionary<int, string>)ViewBag.UserNames;
+    var productNames = (Dictionary<int, string>)ViewBag.ProductNames;
+    var statusLabel = Model.status.ToString();
+}
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+        <a href="/orders" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700">
+            @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+            Orders
+        </a>
+        <h2 class="mt-2 text-lg font-semibold text-slate-900">Order #@Model.order_id</h2>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="/orders/edit/@Model.order_id" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            @await Html.PartialAsync("_Icon", "pencil|h-4 w-4") Edit
+        </a>
+        <a href="/orders/delete/@Model.order_id" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50">
+            @await Html.PartialAsync("_Icon", "trash|h-4 w-4") Delete
+        </a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+    <div class="rounded-xl border border-slate-200 bg-white p-5 lg:col-span-1">
+        <h3 class="text-sm font-semibold text-slate-900">Summary</h3>
+        <dl class="mt-4 space-y-4">
+            <div>
+                <dt class="text-xs text-slate-400">Customer</dt>
+                <dd class="mt-0.5 text-sm text-slate-700">@(userNames.GetValueOrDefault(Model.user_id, "User #" + Model.user_id))</dd>
+            </div>
+            <div>
+                <dt class="text-xs text-slate-400">Order date</dt>
+                <dd class="mt-0.5 text-sm text-slate-700">@Model.order_date.ToString("MMMM d, yyyy")</dd>
+            </div>
+            <div>
+                <dt class="text-xs text-slate-400">Status</dt>
+                <dd class="mt-1">@await Html.PartialAsync("_StatusBadge", statusLabel)</dd>
+            </div>
+            <div>
+                <dt class="text-xs text-slate-400">Total</dt>
+                <dd class="mt-0.5 font-mono text-lg font-semibold text-slate-900">@("$" + Model.total_amount.ToString("N2"))</dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="rounded-xl border border-slate-200 bg-white lg:col-span-2">
+        <div class="border-b border-slate-100 px-5 py-4">
+            <h3 class="text-sm font-semibold text-slate-900">Line items</h3>
+        </div>
+        <table class="w-full text-left text-sm">
+            <thead>
+                <tr class="border-b border-slate-100 text-xs font-medium text-slate-500">
+                    <th class="px-5 py-2.5">Product</th>
+                    <th class="px-5 py-2.5">Qty</th>
+                    <th class="px-5 py-2.5">Unit price</th>
+                    <th class="px-5 py-2.5">Line total</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model.order_items != null && Model.order_items.Any())
+                {
+                    foreach (var oi in Model.order_items)
+                    {
+                        <tr>
+                            <td class="px-5 py-3 text-slate-700">@(productNames.GetValueOrDefault(oi.product_id, "Product #" + oi.product_id))</td>
+                            <td class="px-5 py-3 text-slate-500">@oi.quantity</td>
+                            <td class="px-5 py-3 font-mono text-slate-500">@("$" + oi.price.ToString("N2"))</td>
+                            <td class="px-5 py-3 font-mono text-slate-700">@("$" + (oi.quantity * oi.price).ToString("N2"))</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="4" class="px-5 py-8 text-center text-sm text-slate-400">No line items on this order.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

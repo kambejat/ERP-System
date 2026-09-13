@@ -26,7 +26,6 @@ namespace Erp.Models
 
         [Required]
         [Column("payment_method")]
-        [EnumDataType(typeof(PaymentMethod))]
         public PaymentMethod payment_method { get; set; }
 
         [Required]

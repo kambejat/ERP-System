@@ -1,0 +1,40 @@
+@* Reusable flash banner. Reads TempData first (survives redirects), then ViewData (same-request re-renders). *@
+@{
+    var success = TempData["SuccessMessage"] as string ?? ViewData["SuccessMessage"] as string;
+    var error = TempData["ErrorMessage"] as string ?? ViewData["ErrorMessage"] as string;
+}
+@if (!string.IsNullOrWhiteSpace(success))
+{
+    <div class="mb-6 flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="alert">
+        @await Html.PartialAsync("_Icon", "check-circle|h-5 w-5 flex-shrink-0 text-emerald-500")
+        <span class="flex-1">@success</span>
+        <button type="button" class="text-emerald-500 hover:text-emerald-700" onclick="this.closest('[role=alert]').remove()">
+            @await Html.PartialAsync("_Icon", "close|h-4 w-4")
+        </button>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(error))
+{
+    <div class="mb-6 flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+        @await Html.PartialAsync("_Icon", "alert-triangle|h-5 w-5 flex-shrink-0 text-rose-500")
+        <span class="flex-1">@error</span>
+        <button type="button" class="text-rose-500 hover:text-rose-700" onclick="this.closest('[role=alert]').remove()">
+            @await Html.PartialAsync("_Icon", "close|h-4 w-4")
+        </button>
+    </div>
+}
+@if (ViewData.ModelState != null && !ViewData.ModelState.IsValid && ViewData.ModelState.ErrorCount > 0)
+{
+    <div class="mb-6 flex items-start gap-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800" role="alert">
+        @await Html.PartialAsync("_Icon", "alert-triangle|h-5 w-5 flex-shrink-0 text-rose-500")
+        <div class="flex-1">
+            <p class="font-medium">Please fix the following before continuing:</p>
+            <ul class="mt-1 list-disc space-y-0.5 pl-5">
+                @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <li>@err.ErrorMessage</li>
+                }
+            </ul>
+        </div>
+    </div>
+}

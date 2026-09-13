@@ -1,0 +1,176 @@
+@using System.Text.Json
+@model Erp.Models.Order?
+@{
+    var products = (List<Erp.Models.Product>)ViewBag.Products;
+    var productsJson = JsonSerializer.Serialize(products.Select(p => new { id = p.product_id, name = p.name_of_product, price = p.price }));
+    var existingItemsJson = Model != null && Model.order_items != null
+        ? JsonSerializer.Serialize(Model.order_items.Select(i => new { order_item_id = i.order_item_id, product_id = i.product_id, quantity = i.quantity, price = i.price }))
+        : "[]";
+}
+
+<div>
+    <div class="mb-2 flex items-center justify-between">
+        <label class="block text-sm font-medium text-slate-700">Line items</label>
+        <button type="button" id="oi-add-row" class="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50">
+            @await Html.PartialAsync("_Icon", "plus|h-3.5 w-3.5")
+            Add item
+        </button>
+    </div>
+
+    <div id="oi-error" class="mb-3 hidden rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">
+        Add at least one line item before saving.
+    </div>
+
+    <div class="overflow-hidden rounded-lg border border-slate-200">
+        <table class="w-full text-left text-sm">
+            <thead>
+                <tr class="border-b border-slate-200 bg-slate-50 text-xs font-medium text-slate-500">
+                    <th class="px-3 py-2">Product</th>
+                    <th class="w-24 px-3 py-2">Qty</th>
+                    <th class="w-32 px-3 py-2">Unit price</th>
+                    <th class="w-32 px-3 py-2">Line total</th>
+                    <th class="w-10 px-3 py-2"></th>
+                </tr>
+            </thead>
+            <tbody id="oi-rows" class="divide-y divide-slate-100"></tbody>
+        </table>
+        <div class="flex items-center justify-end gap-2 border-t border-slate-200 bg-slate-50 px-4 py-3">
+            <span class="text-sm text-slate-500">Order total</span>
+            <span id="oi-total" class="font-mono text-base font-semibold text-slate-900">$0.00</span>
+        </div>
+    </div>
+
+    <input type="hidden" name="order_items_json" id="order_items_json" />
+</div>
+
+<script id="oi-products-data" type="application/json">@Html.Raw(productsJson)</script>
+<script id="oi-existing-data" type="application/json">@Html.Raw(existingItemsJson)</script>
+
+<template id="oi-row-template">
+    <tr class="oi-row">
+        <td class="px-3 py-2">
+            <select class="oi-product block w-full rounded-lg border border-slate-300 bg-white px-2.5 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500"></select>
+        </td>
+        <td class="px-3 py-2">
+            <input type="number" min="1" step="1" value="1" class="oi-qty block w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+        </td>
+        <td class="px-3 py-2">
+            <input type="number" min="0" step="0.01" value="0.00" class="oi-price block w-full rounded-lg border border-slate-300 px-2.5 py-2 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+        </td>
+        <td class="oi-line-total px-3 py-2 font-mono text-slate-700">$0.00</td>
+        <td class="px-3 py-2 text-right">
+            <button type="button" class="oi-remove rounded-lg p-1.5 text-slate-400 hover:bg-rose-50 hover:text-rose-600">
+                @await Html.PartialAsync("_Icon", "trash|h-4 w-4")
+            </button>
+        </td>
+    </tr>
+</template>
+
+<script>
+    (function () {
+        var products = JSON.parse(document.getElementById('oi-products-data').textContent || '[]');
+        var existing = JSON.parse(document.getElementById('oi-existing-data').textContent || '[]');
+        var rowsBody = document.getElementById('oi-rows');
+        var rowTemplate = document.getElementById('oi-row-template');
+        var totalEl = document.getElementById('oi-total');
+        var hiddenInput = document.getElementById('order_items_json');
+        var errorEl = document.getElementById('oi-error');
+
+        function money(n) { return '$' + (Math.round(n * 100) / 100).toFixed(2); }
+
+        function productById(id) {
+            for (var i = 0; i < products.length; i++) { if (products[i].id === id) return products[i]; }
+            return null;
+        }
+
+        function buildOptions(select, selectedId) {
+            var html = '<option value="">Select a product</option>';
+            products.forEach(function (p) {
+                html += '<option value="' + p.id + '"' + (p.id === selectedId ? ' selected' : '') + '>' + p.name + '</option>';
+            });
+            select.innerHTML = html;
+        }
+
+        function recalcRow(row) {
+            var qty = parseFloat(row.querySelector('.oi-qty').value) || 0;
+            var price = parseFloat(row.querySelector('.oi-price').value) || 0;
+            row.querySelector('.oi-line-total').textContent = money(qty * price);
+            recalcTotal();
+        }
+
+        function recalcTotal() {
+            var total = 0;
+            rowsBody.querySelectorAll('.oi-row').forEach(function (row) {
+                var qty = parseFloat(row.querySelector('.oi-qty').value) || 0;
+                var price = parseFloat(row.querySelector('.oi-price').value) || 0;
+                total += qty * price;
+            });
+            totalEl.textContent = money(total);
+        }
+
+        function addRow(data) {
+            var frag = rowTemplate.content.cloneNode(true);
+            var row = frag.querySelector('.oi-row');
+            row.dataset.orderItemId = (data && data.order_item_id) ? data.order_item_id : 0;
+
+            var select = row.querySelector('.oi-product');
+            buildOptions(select, data ? data.product_id : null);
+
+            var qtyInput = row.querySelector('.oi-qty');
+            var priceInput = row.querySelector('.oi-price');
+            qtyInput.value = data ? data.quantity : 1;
+            priceInput.value = data ? Number(data.price).toFixed(2) : '0.00';
+
+            select.addEventListener('change', function () {
+                var p = productById(parseInt(select.value, 10));
+                if (p) { priceInput.value = Number(p.price).toFixed(2); }
+                recalcRow(row);
+            });
+            qtyInput.addEventListener('input', function () { recalcRow(row); });
+            priceInput.addEventListener('input', function () { recalcRow(row); });
+            row.querySelector('.oi-remove').addEventListener('click', function () {
+                row.remove();
+                recalcTotal();
+            });
+
+            rowsBody.appendChild(row);
+            recalcRow(row);
+        }
+
+        document.getElementById('oi-add-row').addEventListener('click', function () { addRow(null); });
+
+        if (existing.length > 0) {
+            existing.forEach(function (item) { addRow(item); });
+        } else {
+            addRow(null);
+        }
+
+        var form = document.getElementById('order-form');
+        if (form) {
+            form.addEventListener('submit', function (e) {
+                var items = [];
+                rowsBody.querySelectorAll('.oi-row').forEach(function (row) {
+                    var productId = parseInt(row.querySelector('.oi-product').value, 10);
+                    var qty = parseInt(row.querySelector('.oi-qty').value, 10);
+                    var price = parseFloat(row.querySelector('.oi-price').value);
+                    if (productId && qty > 0) {
+                        items.push({
+                            order_item_id: parseInt(row.dataset.orderItemId, 10) || 0,
+                            product_id: productId,
+                            quantity: qty,
+                            price: price || 0
+                        });
+                    }
+                });
+                if (items.length === 0) {
+                    e.preventDefault();
+                    errorEl.classList.remove('hidden');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    return false;
+                }
+                errorEl.classList.add('hidden');
+                hiddenInput.value = JSON.stringify(items);
+            });
+        }
+    })();
+</script>

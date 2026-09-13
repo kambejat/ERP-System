@@ -1,6 +1,14 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
+@{
+    ViewData["Title"] = "Privacy policy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<h2 class="text-xl font-semibold text-slate-900">Privacy policy</h2>
+<div class="prose prose-sm prose-slate mt-4 max-w-none text-slate-600">
+    <p>This internal system stores employee, payroll, order, and account data solely to operate the business. Use this page to document your organization's actual data handling, retention, and access policies.</p>
+    <p>Replace this placeholder with your organization's real privacy notice before shipping to production.</p>
+</div>
+
+<a href="/" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-teal-600 hover:text-teal-700">
+    @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+    Back to sign in
+</a>

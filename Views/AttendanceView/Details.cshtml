@@ -1,0 +1,64 @@
+@model Erp.Models.Attendance
+@{
+    ViewData["Title"] = "Attendance record details";
+    ViewData["Section"] = "Human resources";
+    ViewData["ActiveNav"] = "Attendance";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+        <a href="/attendance" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-700">
+    @await Html.PartialAsync("_Icon", "back|h-4 w-4")
+    Attendance
+</a>
+        <h2 class="mt-2 text-lg font-semibold text-slate-900">@Model.date.ToString("MMMM d, yyyy")</h2>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="/attendance/edit/@Model.attendance_id" class="inline-flex items-center gap-2 rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50">
+            @await Html.PartialAsync("_Icon", "pencil|h-4 w-4") Edit
+        </a>
+        <a href="/attendance/delete/@Model.attendance_id" class="inline-flex items-center gap-2 rounded-lg border border-rose-200 px-4 py-2.5 text-sm font-medium text-rose-600 hover:bg-rose-50">
+            @await Html.PartialAsync("_Icon", "trash|h-4 w-4") Delete
+        </a>
+    </div>
+</div>
+
+<div class="max-w-2xl overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div class="flex items-center gap-4 border-b border-slate-100 bg-slate-50/60 px-6 py-5">
+        <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
+            @await Html.PartialAsync("_Icon", "clock|h-5 w-5")
+        </span>
+        <p class="text-base font-semibold text-slate-900">@Model.date.ToString("MMMM d, yyyy")</p>
+    </div>
+    <dl class="divide-y divide-slate-100">
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Employee</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(((Dictionary<int,string>)ViewBag.EmployeeNames).GetValueOrDefault(Model.employee_id, "Employee #" + Model.employee_id))</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Date</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.date.ToString("MMM d, yyyy")</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Check-in</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(Model.check_in.HasValue ? Model.check_in.Value.ToString("h:mm tt") : "—")</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Check-out</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@(Model.check_out.HasValue ? Model.check_out.Value.ToString("h:mm tt") : "—")</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Status</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@await Html.PartialAsync("_StatusBadge", Model.status)</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Created</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.created_at.ToString("MMM d, yyyy")</dd>
+        </div>
+        <div class="grid grid-cols-3 gap-4 px-6 py-4">
+            <dt class="text-sm text-slate-500">Updated</dt>
+            <dd class="col-span-2 text-sm text-slate-700">@Model.updated_at.ToString("MMM d, yyyy")</dd>
+        </div>
+    </dl>
+</div>

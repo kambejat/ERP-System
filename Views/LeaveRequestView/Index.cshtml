@@ -1,0 +1,78 @@
+@model IEnumerable<Erp.Models.LeaveRequest>
+@{
+    ViewData["Title"] = "Leave requests";
+    ViewData["Section"] = "Human resources";
+    ViewData["ActiveNav"] = "LeaveRequests";
+    Layout = "~/Views/Shared/_LayoutDashboard.cshtml";
+}
+
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+    <div>
+        <h2 class="text-lg font-semibold text-slate-900">Leave requests</h2>
+        <p class="mt-1 text-sm text-slate-500">Time-off requests awaiting or past review.</p>
+    </div>
+    <a href="/leave-requests/create" class="inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-700">
+        @await Html.PartialAsync("_Icon", "plus|h-4 w-4")
+        Add leave request
+    </a>
+</div>
+
+<div class="rounded-xl border border-slate-200 bg-white">
+    <div class="border-b border-slate-200 p-4">
+        <div class="relative max-w-xs">
+            <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                @await Html.PartialAsync("_Icon", "search|h-4 w-4")
+            </span>
+            <input type="text" data-table-search="#leave-requests-table" placeholder="Search leave requests"
+                   class="block w-full rounded-lg border border-slate-300 py-2 pl-9 pr-3 text-sm focus:border-teal-500 focus:outline-none focus:ring-1 focus:ring-teal-500" />
+        </div>
+    </div>
+
+    <div class="overflow-x-auto">
+        <table id="leave-requests-table" class="w-full text-left text-sm">
+            <thead>
+                <tr class="border-b border-slate-200 text-xs font-medium text-slate-500">
+                    <th class="px-4 py-3">Employee</th>
+                    <th class="px-4 py-3">Type</th>
+                    <th class="px-4 py-3">Start</th>
+                    <th class="px-4 py-3">End</th>
+                    <th class="px-4 py-3">Status</th>
+                    <th class="px-4 py-3 text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-4 py-3">@(((Dictionary<int,string>)ViewBag.EmployeeNames).GetValueOrDefault(item.employee_id, "Employee #" + item.employee_id))</td>
+                            <td class="px-4 py-3">@(string.IsNullOrEmpty(item.leave_type) ? "—" : item.leave_type)</td>
+                            <td class="px-4 py-3">@item.start_date.ToString("MMM d, yyyy")</td>
+                            <td class="px-4 py-3">@item.end_date.ToString("MMM d, yyyy")</td>
+                            <td class="px-4 py-3">@await Html.PartialAsync("_StatusBadge", item.status)</td>
+                            <td class="px-4 py-3">
+                                <div class="flex items-center justify-end gap-1">
+                                    <a href="/leave-requests/details/@item.leave_id" title="View" class="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700">@await Html.PartialAsync("_Icon", "eye|h-4 w-4")</a>
+                                    <a href="/leave-requests/edit/@item.leave_id" title="Edit" class="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700">@await Html.PartialAsync("_Icon", "pencil|h-4 w-4")</a>
+                                    <a href="/leave-requests/delete/@item.leave_id" title="Delete" class="rounded-lg p-2 text-slate-400 hover:bg-rose-50 hover:text-rose-600">@await Html.PartialAsync("_Icon", "trash|h-4 w-4")</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+                <tr data-empty-row class="hidden">
+                    <td colspan="6" class="px-4 py-10 text-center text-sm text-slate-400">No leave requests match your search.</td>
+                </tr>
+                @if (Model == null || !Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="px-4 py-10 text-center text-sm text-slate-400">
+                            No leave requests yet. <a href="/leave-requests/create" class="font-medium text-teal-600 hover:text-teal-700">Add the first one</a>.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

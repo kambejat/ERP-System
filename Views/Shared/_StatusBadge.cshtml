@@ -1,0 +1,30 @@
+@* Reusable status pill. Pass any status label as a string; color is inferred from keywords.
+   Usage: @await Html.PartialAsync("_StatusBadge", (string)item.status) *@
+@model string
+@{
+    var label = string.IsNullOrWhiteSpace(Model) ? "—" : Model;
+    var key = label.ToLowerInvariant();
+
+    string classes;
+    if (key.Contains("active") || key.Contains("approved") || key.Contains("paid") || key.Contains("completed")
+        || key.Contains("delivered") || key.Contains("present") || key.Contains("processed") || key.Contains("in stock"))
+    {
+        classes = "bg-emerald-50 text-emerald-700 ring-1 ring-inset ring-emerald-200";
+    }
+    else if (key.Contains("pending") || key.Contains("processing") || key.Contains("half day") || key.Contains("on leave")
+        || key.Contains("shipped") || key.Contains("low stock") || key.Contains("late"))
+    {
+        classes = "bg-amber-50 text-amber-700 ring-1 ring-inset ring-amber-200";
+    }
+    else if (key.Contains("inactive") || key.Contains("rejected") || key.Contains("failed") || key.Contains("cancelled")
+        || key.Contains("canceled") || key.Contains("absent") || key.Contains("terminated") || key.Contains("refunded")
+        || key.Contains("out of stock") || key.Contains("overdue"))
+    {
+        classes = "bg-rose-50 text-rose-700 ring-1 ring-inset ring-rose-200";
+    }
+    else
+    {
+        classes = "bg-slate-100 text-slate-600 ring-1 ring-inset ring-slate-200";
+    }
+}
+<span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium @classes">@label</span>
