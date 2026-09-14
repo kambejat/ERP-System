@@ -1,199 +1,311 @@
-# ERP Console — Flowbite / Tailwind Admin UI
+# ERP System
 
-A full set of **Razor views** (Tailwind CSS + Flowbite via CDN — no npm/build step) for every entity in the ERP, plus the **MVC controllers** that serve them. Copy these files on top of your existing ASP.NET project.
+Enterprise Resource Planning (ERP) application for managing users, employees, HR (attendance, leave, payroll), inventory, orders, and payments.
 
-Views and controllers were cross-checked property-by-property against your real `Models/` (including a script pass over every `Model.x` / `item.x` / `asp-for="x"`). This environment has no .NET SDK, so the project cannot be compiled here; that model pass is the main confidence check.
-
----
-
-## Table of contents
-
-1. [What’s included](#whats-included)
-2. [Model alignment fixes](#model-alignment-fixes)
-3. [Routes & controllers](#routes--controllers)
-4. [Orders & line items](#orders--line-items)
-5. [Additional fixes](#additional-fixes)
-6. [SQLite setup](#sqlite-setup)
-7. [Install steps](#install-steps)
-8. [Design preview](#design-preview)
-9. [Known caveats](#known-caveats)
+This README documents the **SQL Server database** (`ERP_DB`) from the provided schema script and how the main modules relate.
 
 ---
 
-## What’s included
+## Overview
 
-| Area | Contents |
-|------|----------|
-| **Views** | Index / Create / Edit / Details (and Delete where relevant) for each entity |
-| **MVC controllers** | One view controller per entity (API controllers left untouched) |
-| **Dashboard** | Live counts + recent logs |
-| **Styling** | Tailwind + Flowbite from CDN |
-| **Preview** | `design_preview.html` — static mock UI, open in any browser |
-
-**Entities covered:** Employees, Attendance, Leave Requests, Payroll, Orders, Products, Transactions, Suppliers, Logs, Settings, Users, Dashboard, Home/Login.
+| Layer | Technology |
+|-------|------------|
+| Database | Microsoft SQL Server (`ERP_DB`) |
+| ORM | Entity Framework Core (migrations table present) |
+| Backend | ASP.NET (API + MVC admin console) |
+| Admin UI | Razor views, Tailwind CSS + Flowbite (CDN) |
 
 ---
 
-## Model alignment fixes
+## Database
 
-After the first build failed, controllers and views were rebuilt against your actual model classes.
+**Name:** `ERP_DB`  
+**Script date:** 23 March 2025  
 
-### Supplier
+### Tables
 
-| Incorrect (assumed) | Actual model |
-|---------------------|--------------|
-| `supplier_name` | `name_of_supplier` |
-| `status`, `updated_at` | **Not present** |
+| Table | Purpose | Primary key |
+|-------|---------|-------------|
+| `Users` | Login accounts and roles | `user_id` |
+| `Employees` | Staff profiles (optional link to a user) | `employee_id` |
+| `Attendances` | Daily check-in / check-out | `attendance_id` |
+| `LeaveRequests` | Leave applications | `leave_id` |
+| `Payrolls` | Pay runs per employee | `payroll_id` |
+| `Product` | Inventory catalog | `product_id` |
+| `Orders` | Sales orders | `order_id` |
+| `OrderItems` | Line items on an order | `order_item_id` |
+| `Transactions` | Payments against orders | `transaction_id` |
+| `Settings` | Key/value app configuration | `setting_key` |
+| `Logs` | Audit trail of user actions | `log_id` |
+| `__EFMigrationsHistory` | EF Core migration history | `MigrationId` |
 
-**Fields used:** `supplier_id`, `name_of_supplier`, `contact_person`, `email`, `phone`, `address`, `created_at`.
-
-### Enums (not raw ints)
-
-| Property | Type | Values |
-|----------|------|--------|
-| `Transaction.status` | `TransactionStatus` | `pending`, `completed`, `failed` |
-| `Transaction.payment_method` | `PaymentMethod` | `cash`, `card`, `bank_transfer` |
-| `Order.status` | `OrderStatus` | `pending`, `completed`, `cancelled` (3 values only) |
-
-Dropdowns and badges use `Enum.GetValues<T>()` and compare against enum members — no magic numbers.
-
-`DashboardController` previously compared statuses to raw ints (`o.status < 3`, `t.status == 1`) and was missing `using Erp.Models;`. Both are fixed.
-
-### Unchanged models
-
-These already matched field names: `Employee`, `Attendance`, `LeaveRequest`, `Payroll`, `Product`, `Setting`, `Log`, `User`.
-
-### String status casing
-
-`Employee.status`, `Attendance.status`, `LeaveRequest.status` / `leave_type`, and `Payroll.status` are **string** columns. C# defaults are lowercase (`"active"`, `"pending"`, `"present"`), while form dropdowns submit capitalized labels (`"Active"`, `"Pending"`, …).
-
-That is consistent within this UI package. If other code filters on the lowercase defaults, align casing in either the options or those queries.
+> **Note:** There is **no `Suppliers` table** in this SQL script. If the admin UI includes Suppliers, that feature needs a matching table/model or should be treated as not yet migrated.
 
 ---
 
-## Routes & controllers
+## Entity reference
 
-Most original controllers were JSON API only (`[ApiController] : ControllerBase`). Parallel **MVC** controllers were added so views have something to bind to. **Existing API controllers are not modified.**
+### Users
 
-| Route | Controller | Notes |
-|-------|------------|--------|
-| `/employees` | `EmployeeViewController` | |
-| `/attendance` | `AttendanceViewController` | |
-| `/leave-requests` | `LeaveRequestViewController` | |
-| `/payroll` | `PayrollViewController` | Uses `Payroll.Employee` navigation |
-| `/orders` | `OrderViewController` | Line items via JSON hidden field |
-| `/products` | `ProductViewController` | |
-| `/transactions` | `TransactionViewController` | Uses `Transaction.Order`, enums |
-| `/suppliers` | `SupplierViewController` | |
-| `/logs` | `LogViewController` | Read-only: Index / Details / Delete |
-| `/settings` | `SettingViewController` | String PK (`setting_key`) |
+| Column | Type | Notes |
+|--------|------|--------|
+| `user_id` | int, identity | PK |
+| `username` | nvarchar(50) | Required |
+| `email` | nvarchar(100) | Required |
+| `password_hash` | nvarchar(255) | Required |
+| `role` | nvarchar(max) | Required (e.g. admin, staff) |
+| `created_at` | datetime2 | Required |
+| `updated_at` | datetime2 | Required |
 
-`DashboardController` supplies:
+### Employees
 
-- Counts: employees, pending leave, open orders, low-stock products, suppliers  
-- This month’s revenue  
-- Six most recent log entries  
+| Column | Type | Notes |
+|--------|------|--------|
+| `employee_id` | int, identity | PK |
+| `user_id` | int, null | FK → `Users` (optional) |
+| `first_name`, `last_name` | nvarchar(max) | Required |
+| `email` | nvarchar(max) | Required |
+| `phone`, `job_title`, `department` | nvarchar(max) | Optional |
+| `hire_date` | datetime2 | Required |
+| `salary` | decimal(18,2) | Optional |
+| `status` | nvarchar(max) | Required (e.g. active) |
+| `created_at`, `updated_at` | datetime2 | Required |
+
+### Attendances
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `attendance_id` | int, identity | PK |
+| `employee_id` | int | FK → `Employees` (cascade delete) |
+| `date` | datetime2 | Required |
+| `check_in`, `check_out` | datetime2 | Optional |
+| `status` | nvarchar(max) | Required |
+| `created_at`, `updated_at` | datetime2 | Required |
+
+### LeaveRequests
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `leave_id` | int, identity | PK |
+| `employee_id` | int | FK → `Employees` (cascade delete) |
+| `start_date`, `end_date` | datetime2 | Required |
+| `leave_type` | nvarchar(max) | Optional |
+| `status` | nvarchar(max) | Required |
+| `created_at`, `updated_at` | datetime2 | Required |
+
+### Payrolls
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `payroll_id` | int, identity | PK |
+| `employee_id` | int | FK → `Employees` (cascade delete) |
+| `pay_period_start`, `pay_period_end` | datetime2 | Required |
+| `gross_salary`, `tax` | decimal(18,2) | Required |
+| `status` | nvarchar(max) | Required |
+| `processed_at` | datetime2 | Required |
+
+### Product
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `product_id` | int, identity | PK |
+| `name_of_product` | nvarchar(100) | Required |
+| `description` | nvarchar(max) | Optional |
+| `sku` | nvarchar(50) | Optional |
+| `price` | decimal(10,2) | Required |
+| `quantity_in_stock` | int | Required |
+| `reorder_level` | int | Required |
+| `category` | nvarchar(50) | Optional |
+| `created_at`, `updated_at` | datetime2 | Required |
+
+### Orders
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `order_id` | int, identity | PK |
+| `user_id` | int | FK → `Users` (cascade delete) |
+| `order_date` | datetime2 | Required |
+| `status` | **int** | Required (maps to app enum / status codes) |
+| `total_amount` | decimal(12,2) | Required |
+| `created_at`, `updated_at` | datetime2 | Required |
+
+### OrderItems
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `order_item_id` | int, identity | PK |
+| `order_id` | int | FK → `Orders` (cascade delete) |
+| `product_id` | int | FK → `Product` (cascade delete) |
+| `quantity` | int | Required |
+| `price` | decimal(10,2) | Required |
+
+### Transactions
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `transaction_id` | int, identity | PK |
+| `order_id` | int | FK → `Orders` (cascade delete) |
+| `transaction_date` | datetime2 | Required |
+| `amount` | decimal(12,2) | Required |
+| `payment_method` | **int** | Required (enum in app layer) |
+| `status` | **int** | Required (enum in app layer) |
+
+### Settings
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `setting_key` | nvarchar(450) | PK |
+| `setting_value` | nvarchar(max) | Required |
+
+### Logs
+
+| Column | Type | Notes |
+|--------|------|--------|
+| `log_id` | int, identity | PK |
+| `user_id` | int | FK → `Users` (cascade delete) |
+| `action` | nvarchar(max) | Required |
+| `timestamp` | datetime2 | Required |
 
 ---
 
-## Orders & line items
+## Relationships
 
-`Order` has `List<OrderItem> order_items`. Variable-length rows are awkward with classic indexed form names, so:
+```
+Users 1───* Orders
+Users 1───* Logs
+Users 1───0..1 Employees   (optional user_id on Employee)
 
-1. Create/Edit uses a JS table (`Views/Orders/_OrderItemsEditor.cshtml`) with add/remove and a live total.
-2. On submit, JS writes the rows as JSON into a hidden `order_items_json` field.
-3. `OrderViewController` deserializes server-side and reconciles with the database:
-   - Missing rows → deleted  
-   - Matching IDs → updated  
-   - `order_item_id == 0` → inserted  
-4. **`total_amount` is always recomputed server-side** from `quantity * price` (client total is not trusted).
+Employees 1───* Attendances
+Employees 1───* LeaveRequests
+Employees 1───* Payrolls
+
+Orders 1───* OrderItems  *───1 Product
+Orders 1───* Transactions
+```
+
+**Cascade delete** is enabled on:
+
+- Attendance / Leave / Payroll → Employee  
+- OrderItems / Transactions → Order  
+- OrderItems → Product  
+- Orders / Logs → User  
+
+Deleting a user or order can remove a large amount of related data — use with care in production.
 
 ---
 
-## Additional fixes
+## Status & enum columns
 
-| Issue | Fix |
-|-------|-----|
-| `Views/Users/Create.cshtml` missing antiforgery | Added `@Html.AntiForgeryToken()` |
-| `Views/Users/Edit.cshtml` missing `user_id` | Hidden field so `id != updatedUser.user_id` no longer always fails |
-| Edit resetting `created_at` | `created_at` carried as a hidden field |
-| Missing views | Added `Views/Users/Details.cshtml`, `Views/Home/Login.cshtml` |
+In the **database**, these are stored as integers or free text:
+
+| Column | DB type | Typical app mapping |
+|--------|---------|---------------------|
+| `Orders.status` | int | e.g. pending / completed / cancelled |
+| `Transactions.status` | int | e.g. pending / completed / failed |
+| `Transactions.payment_method` | int | e.g. cash / card / bank_transfer |
+| `Employees.status`, `Attendances.status`, `LeaveRequests.status`, `Payrolls.status` | nvarchar | e.g. active, present, pending |
+
+Keep C# enums (or string constants) aligned with whatever values the UI and APIs write.
 
 ---
 
-## SQLite setup
+## Indexes
 
-`appsettings.json` in this bundle already uses:
+Nonclustered indexes exist on foreign keys:
+
+- `Attendances.employee_id`
+- `Employees.user_id`
+- `LeaveRequests.employee_id`
+- `Logs.user_id`
+- `OrderItems.order_id`, `OrderItems.product_id`
+- `Orders.user_id`
+- `Payrolls.employee_id`
+- `Transactions.order_id`
+
+---
+
+## Modules (application)
+
+| Module | Tables | Description |
+|--------|--------|-------------|
+| **Auth / Users** | `Users` | Accounts, roles, password hashes |
+| **HR — Employees** | `Employees` | Staff directory |
+| **HR — Attendance** | `Attendances` | Time tracking |
+| **HR — Leave** | `LeaveRequests` | Leave workflow |
+| **HR — Payroll** | `Payrolls` | Salary processing |
+| **Inventory** | `Product` | Stock and pricing |
+| **Sales** | `Orders`, `OrderItems` | Order capture and lines |
+| **Payments** | `Transactions` | Payment records |
+| **Config** | `Settings` | App key/value settings |
+| **Audit** | `Logs` | User action log |
+
+---
+
+## Admin console (optional UI package)
+
+If you use the Flowbite/Tailwind ERP Console views:
+
+| Route (example) | Area |
+|-----------------|------|
+| `/dashboard` | KPIs and recent logs |
+| `/users` | User management |
+| `/employees` | Employees |
+| `/attendance` | Attendance |
+| `/leave-requests` | Leave |
+| `/payroll` | Payroll |
+| `/products` | Products |
+| `/orders` | Orders + line-item editor |
+| `/transactions` | Transactions |
+| `/settings` | Settings |
+| `/logs` | Logs (read-oriented) |
+
+API controllers and MVC view controllers can coexist; keep route prefixes distinct.
+
+---
+
+## Setup (SQL Server)
+
+1. Run the provided script against SQL Server (creates `ERP_DB` and all objects).  
+2. Adjust file paths in the script if your instance is not under the default `MSSQL16.MSSQLSERVER` data folder.  
+3. Point the app connection string at `ERP_DB`, for example:
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Data Source=erp.db"
+  "DefaultConnection": "Server=localhost;Database=ERP_DB;Trusted_Connection=True;TrustServerCertificate=True"
 }
 ```
 
-Three project-side changes (not applied here — needs your `Program.cs` / `.csproj`):
+4. Ensure EF migrations match this schema, or use the database as-is with `EnsureCreated` / scaffold only if that matches your workflow.
 
-### 1. NuGet packages
+### Optional: SQLite for local dev
 
-```bash
-dotnet remove package Microsoft.EntityFrameworkCore.SqlServer
-dotnet add package Microsoft.EntityFrameworkCore.Sqlite
-```
-
-### 2. Provider in `Program.cs`
-
-```csharp
-// before
-options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
-
-// after
-options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
-```
-
-### 3. New migrations (provider-specific)
-
-```bash
-rm -r Migrations   # or move them aside on Windows
-dotnet ef migrations add InitialSqlite
-dotnet ef database update
-```
-
-This creates `erp.db` in the project folder on first run.
-
-**Note:** SQLite does not enforce `decimal(12,2)` the way SQL Server does. Annotations on `Order.total_amount`, `Transaction.amount`, etc. still round-trip; there is simply no hard scale constraint in the DB.
+You can retarget EF Core to SQLite (`Data Source=erp.db`) for lighter local work. Regenerate migrations after changing provider; SQLite will not enforce decimal precision the same way as SQL Server.
 
 ---
 
-## Install steps
+## Security notes
 
-1. Copy `Controllers/`, `Views/`, and `appsettings.json` into your project.  
-   Overwrite `DashboardController.cs` and the folders:  
-   `Views/Shared`, `Views/Home`, `Views/Dashboard`, `Views/Users`, `Views/Suppliers`, `Views/Orders`, `Views/Transactions` (and other entity view folders as needed).
-2. Complete the [SQLite setup](#sqlite-setup) if you are switching providers.
-3. No extra `Program.cs` wiring is required for these view controllers — they are normal `Controller` classes with `[Route]` attributes, discovered like existing MVC controllers.
-4. Tailwind and Flowbite load from CDN (`cdn.tailwindcss.com`, Flowbite on cdnjs) — no `npm install`.
+- Store only **password hashes** in `Users.password_hash` (never plain text).
+- Restrict who can delete `Users` or `Orders` because of cascade deletes.
+- Treat `Logs` as append-oriented; limit who can delete audit rows.
+- Prefer parameterized queries / EF — do not concatenate SQL from user input.
 
 ---
 
-## Design preview
+## Quick reference — create order flow
 
-Open **`design_preview.html`** in a browser for a static mock of the admin UI (no backend required).
-
----
-
-## Known caveats
-
-- String status/leave-type values may differ in casing between DB defaults and form options — keep them aligned if you filter in code.
-- Order line items depend on the hidden JSON field and server-side reconcile logic; do not bypass that with raw client totals.
-- API controllers and view controllers coexist by design; keep route prefixes distinct to avoid clashes.
-- Upload `Program.cs` and the `.csproj` if you want the SQLite / DI edits applied in-repo next.
+1. User authenticated (`Users`).  
+2. Create `Orders` row (`user_id`, `status`, dates).  
+3. Insert `OrderItems` (`product_id`, `quantity`, `price`).  
+4. Recompute and save `Orders.total_amount` from line items.  
+5. Optionally create `Transactions` when payment is taken.  
+6. Write a `Logs` entry for the action.
 
 ---
 
-## Quick start checklist
+## File / script
 
-- [ ] Copy Controllers + Views + `appsettings.json`
-- [ ] Switch EF provider to SQLite (if desired) and regenerate migrations
-- [ ] Run the app and open `/` or `/dashboard`
-- [ ] Sign in via Home/Login
-- [ ] Smoke-test: Users, Suppliers, Orders (with line items), Transactions, Dashboard counts
+- Database script: SQL Server create script for `ERP_DB` (tables, FKs, indexes).  
+- Application: ASP.NET project with EF Core models mapping to the tables above.
+
+For UI-specific install steps (views, controllers, CDN assets), see the separate **ERP Console** README if you shipped that package alongside the backend.
